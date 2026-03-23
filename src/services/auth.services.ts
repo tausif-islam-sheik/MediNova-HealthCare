@@ -47,3 +47,35 @@ export async function getNewTokensWithRefreshToken(
     return false;
   }
 }
+
+
+export async function getUserInfo() {
+  try {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value;
+
+    if (!accessToken) {
+      return null;
+    }
+
+    const res = await fetch(`${BASE_API_URL}/auth/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `accessToken=${accessToken}`,
+      },
+    });
+
+    if (!res.ok) {
+      console.error("Failed to fetch user info:", res.status, res.statusText);
+      return null;
+    }
+
+    const { data } = await res.json();
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching user info:", error);
+    return null;
+  }
+}

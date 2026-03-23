@@ -102,8 +102,8 @@ export async function proxy(request: NextRequest) {
     if (pathname === "/reset-password") {
       const email = request.nextUrl.searchParams.get("email");
 
-      // case - 1 user has needPasswordChange true
-      //no need for case 1 if need password change is handled from change-password page
+      // Case - 1 user has needPasswordChange true
+      //No need for case 1 if need password change is handled from change-password page
       if (accessToken && email) {
         const userInfo = await getUserInfo();
 
