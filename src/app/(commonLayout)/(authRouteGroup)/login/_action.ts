@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/lib/authUtils";
+import {
+  getDefaultDashboardRoute,
+  isValidRedirectForRole,
+  UserRole,
+} from "@/lib/authUtils";
 import { httpClient } from "@/lib/axios/httpClient";
 import { setTokenInCookies } from "@/lib/tokenUtils";
 import { ApiErrorResponse } from "@/types/api.types";
@@ -27,7 +31,6 @@ export const loginAction = async (
       "/auth/login",
       parsedPayload.data,
     );
-    console.log(response.data);
 
     const { accessToken, refreshToken, token, user } = response.data;
     const { role, emailVerified, needPasswordChange, email } = user;
@@ -52,6 +55,7 @@ export const loginAction = async (
       redirect(targetPath);
     }
   } catch (error: any) {
+    console.log(error, "error");
     if (
       error &&
       typeof error === "object" &&
@@ -60,6 +64,14 @@ export const loginAction = async (
       error.digest.startsWith("NEXT_REDIRECT")
     ) {
       throw error;
+    }
+
+    if (
+      error &&
+      error.response &&
+      error.response.data.message === "Email not verified"
+    ) {
+      redirect(`/verify-email?email=${payload.email}`);
     }
     return {
       success: false,
