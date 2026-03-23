@@ -12,6 +12,7 @@ import {
   getUserInfo,
 } from "./services/auth.services";
 
+
 async function refreshTokenMiddleware(refreshToken: string): Promise<boolean> {
   try {
     const refresh = await getNewTokensWithRefreshToken(refreshToken);
