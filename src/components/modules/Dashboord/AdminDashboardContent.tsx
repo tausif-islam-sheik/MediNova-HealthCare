@@ -17,7 +17,7 @@ const AdminDashboardContent = () => {
 
   const { data } = adminDashboardData as ApiResponse<IAdminDashboardData>;
 
-  console.log(data);
+  // console.log(data);
   return (
     <div>
       <StatsCard
