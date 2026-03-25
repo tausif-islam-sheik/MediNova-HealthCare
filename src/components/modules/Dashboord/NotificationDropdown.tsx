@@ -91,7 +91,7 @@ const NotificationDropdown = () => {
             className="absolute -top-1 -right-1 h-5 w-5 rounded full p-0 flex items-center justify-center"
             variant={"destructive"}
           >
-            <span className="text-[10px">
+            <span className="text-[10px]">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           </Badge>
