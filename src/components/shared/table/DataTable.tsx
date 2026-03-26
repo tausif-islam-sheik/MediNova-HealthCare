@@ -17,9 +17,11 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 interface DataTableActions<TData> {
   onView?: (data: TData) => void;
@@ -33,6 +35,10 @@ interface DataTableProps<TData> {
   actions?: DataTableActions<TData>;
   emptyMessage?: string;
   isLoading?: boolean;
+  sorting?: {
+    state: SortingState;
+    onSortingChange: (state: SortingState) => void;
+  };
 }
 
 const DataTable = <TData,>({
@@ -41,6 +47,7 @@ const DataTable = <TData,>({
   actions,
   emptyMessage,
   isLoading,
+  sorting,
 }: DataTableProps<TData>) => {
   const tableColumns: ColumnDef<TData>[] = actions
     ? [
@@ -50,6 +57,7 @@ const DataTable = <TData,>({
         {
           id: "actions", // Unique id for the column
           header: "Actions",
+          enableSorting: false,
           cell: ({ row }) => {
             const rowData = row.original;
 
@@ -94,6 +102,23 @@ const DataTable = <TData,>({
     data,
     columns: tableColumns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    manualSorting: !!sorting,
+    state: {
+      ...(sorting ? { sorting: sorting.state } : {}),
+    },
+    onSortingChange: sorting
+      ? (updater) => {
+          const currentSortingState = sorting.state;
+
+          const nextSortingState =
+            typeof updater === "function"
+              ? updater(currentSortingState)
+              : updater;
+
+          sorting.onSortingChange(nextSortingState);
+        }
+      : undefined,
   });
   return (
     <div className="relative">
@@ -114,9 +139,30 @@ const DataTable = <TData,>({
               <TableRow key={hg.id}>
                 {hg.headers.map((header) => (
                   <TableHead key={header.id}>
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext(),
+                    {header.isPlaceholder ? null : header.column.getCanSort() ? (
+                      <Button
+                        variant={"ghost"}
+                        className="h-auto cursor-pointer p-0 font-semibold hover:bg-transparent hover:text-inherit focus-visible:ring-0"
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+
+                        {header.column.getIsSorted() === "asc" ? (
+                          <ArrowUp className="ml-1 h-4 w-4" />
+                        ) : header.column.getIsSorted() === "desc" ? (
+                          <ArrowDown className="ml-1 h-4 w-4" />
+                        ) : (
+                          <ArrowUpDown className="ml-1 h-4 w-4 opacity-50" />
+                        )}
+                      </Button>
+                    ) : (
+                      flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )
                     )}
                   </TableHead>
                 ))}
