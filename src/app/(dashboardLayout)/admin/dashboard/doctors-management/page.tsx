@@ -1,4 +1,4 @@
-import DoctorsTable from "@/components/modules/Admin/DoctorsTable";
+import DoctorsTable from "@/components/modules/Admin/DoctorsManagement/DoctorsTable";
 import { getDoctors } from "@/services/doctor.services";
 import {
   dehydrate,
