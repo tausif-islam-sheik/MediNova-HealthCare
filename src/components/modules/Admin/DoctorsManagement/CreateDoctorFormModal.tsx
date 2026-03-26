@@ -39,7 +39,7 @@ import { toast } from "sonner";
 import SpecialitiesMultiSelect from "./SpecialitiesMultiSelect";
 
 interface CreateDoctorFormModalProps {
-  specialties: ISpeciality[];
+  specialities: ISpeciality[];
   isLoadingSpecialities?: boolean;
 }
 

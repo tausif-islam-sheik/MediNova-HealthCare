@@ -29,10 +29,10 @@ export interface IDoctor {
   user: {
     status: UserStatus;
   };
-  specialties: Array<{
-    specialtyId: string;
+  specialities: Array<{
+    specialityId: string;
     doctorId: string;
-    specialty: {
+    speciality: {
       id: string;
       title: string;
       icon: string;
@@ -55,11 +55,11 @@ export interface ICreateDoctorPayload {
     currentWorkingPlace: string;
     designation: string;
   };
-  specialties: string[];
+  specialities: string[];
 }
 
-export interface IUpdateDoctorSpecialtyChange {
-  specialtyId: string;
+export interface IUpdateDoctorSpecialityChange {
+  specialityId: string;
   shouldDelete?: boolean;
 }
 
@@ -76,7 +76,7 @@ export interface IUpdateDoctorPayload {
     currentWorkingPlace?: string;
     designation?: string;
   };
-  specialties?: IUpdateDoctorSpecialtyChange[];
+  specialities?: IUpdateDoctorSpecialityChange[];
 }
 
 export interface IDoctorUserDetails {
